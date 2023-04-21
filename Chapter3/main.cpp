@@ -12,6 +12,7 @@
 #include "shader_m.h"
 #include "camera.h"
 #include "learn_opengl.h"
+#include "Mesh.h"
 
 const int SCR_WIDTH = 800;
 const int SCR_HEIGHT = 600;
@@ -94,8 +95,6 @@ int main()
     lightingShader.use();
     lightingShader.setInt("material.diffuse", 0);
 	lightingShader.setInt("material.specular", 1);
-
-
 
 	while (!glfwWindowShouldClose(window))
 	{
