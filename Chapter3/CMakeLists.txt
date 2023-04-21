@@ -8,6 +8,7 @@ find_package(glm REQUIRED)
 find_package(glad REQUIRED)
 find_package(assimp REQUIRED)
 
-add_executable(LearnOpenGL_Ch3 main.cpp glad.c shader_m.h camera.h stb_image.cpp Mesh.cpp Model.cpp)
+add_executable(LearnOpenGL_Ch3 main.cpp glad.c shader_m.h camera.h stb_image.cpp)
 
 target_link_libraries(LearnOpenGL_Ch3 PRIVATE glfw)
+target_link_libraries(LearnOpenGL_Ch3 PRIVATE assimp::assimp)
