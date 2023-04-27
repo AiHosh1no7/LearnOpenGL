@@ -14,18 +14,11 @@
 #include "camera.h"
 #include "Model.h"
 #include "Data.h"
+#include "learn_opengl.h"
 
 #include <iostream>
 
 using WindowPointer = GLFWwindow*;
-
-int OpenGLInit(WindowPointer &window);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
-unsigned int loadTexture(char const * path);
-unsigned int loadCubemap(vector<std::string> faces);
 
 int main()
 {
@@ -47,7 +40,7 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindVertexArray(0);
 
 	unsigned int skyboxVAO, skyboxVBO;
@@ -131,6 +124,7 @@ int main()
 
 int OpenGLInit(WindowPointer &window)
 {
+	stbi_set_flip_vertically_on_load(false);
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
