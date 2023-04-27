@@ -17,9 +17,9 @@
 
 #include <iostream>
 
-using windowPointer = GLFWwindow*;
+using WindowPointer = GLFWwindow*;
 
-int OpenGLInit(windowPointer &window);
+int OpenGLInit(WindowPointer &window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -35,7 +35,7 @@ int main()
 		return -1;
 	}
 
-	Shader shaderBox("../shader/blending.vert", "../shader/blending.frag");
+	Shader shaderBox("../shader/reflect.vert", "../shader/reflect.frag");
 	Shader shaderSkybox("../shader/skybox.vert", "../shader/skybox.frag");
 
 	unsigned int cubeVAO, cubeVBO;
@@ -45,9 +45,9 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindVertexArray(0);
 
 	unsigned int skyboxVAO, skyboxVBO;
@@ -72,7 +72,7 @@ int main()
 	unsigned int skyboxTextures = loadCubemap(faces);
 
 	shaderBox.use();
-	shaderBox.setInt("texture1", 0);
+	shaderBox.setInt("skybox", 0);
 
 	shaderSkybox.use();
 	shaderSkybox.setInt("skybox", 0);
@@ -95,10 +95,11 @@ int main()
 		shaderBox.setMat4("model", model);
 		shaderBox.setMat4("view", view);
 		shaderBox.setMat4("projection", projection);
+		shaderBox.setVec3("cameraPos", camera.Position);
 
 		glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, cubeTexture);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextures);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
@@ -128,7 +129,7 @@ int main()
 	return 0;
 }
 
-int OpenGLInit(windowPointer &window)
+int OpenGLInit(WindowPointer &window)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -163,6 +164,7 @@ int OpenGLInit(windowPointer &window)
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+	glEnable(GL_DEPTH_TEST);
 
 	return 0;
 }
